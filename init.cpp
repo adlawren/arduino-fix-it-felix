@@ -96,56 +96,6 @@ uint8_t old_felix_x;
 boolean game_over = false;
 boolean won = false;
 
-void setup() {
-  Serial.begin(9600);
-  
-  tft.initR(INITR_REDTAB);
-
-  Serial.print("Initializing SD card...");
-    if (!SD.begin(SD_CS)) {
-      Serial.println("failed!");
-      return;
-    }
-    Serial.println("OK!");
-    if (!card.init(SPI_HALF_SPEED, SD_CS)) {
-        Serial.println("Raw SD Initialization has failed");
-        while (1) {};  // Just wait, stuff exploded.
-    }
-    
-    pinMode(select_pin, INPUT);
-    digitalWrite(select_pin, HIGH);
-    
-    make_windows(windows);
-
-    tft.fillScreen(tft.Color565(0x00, 0x00, 0x00)); // clear screen to black
-    
-    // set up initial layout
-    lcd_image_draw(&background, &tft, 0, 8, 0, 8, 128, 160);
-    tft.drawFastHLine(0, 8, 128, 0xFFFF); // draw scoreboard
-    tft.setCursor(6, 0);
-    tft.setTextColor(0xFFFF);
-    tft.print("Score: ");
-    tft.setCursor(42, 0);
-    tft.print("0");
-    tft.setCursor(79, 0);
-    tft.print("Lives:");
-    tft.setCursor(115, 0);
-    tft.print("3");
-    // break the windows!
-    break_windows(windows);
-
-    // initialize felix:
-    felix_pos.x = 2;
-    felix_pos.y = 2;
-    // initialize ralph
-    ralph_pos.x = 2;
-
-    draw_ralph(ralph_pos);
-    draw_felix(felix_pos);
-
-    ralph_stop = millis()/1000;
-}
-
 // the following function is used to return a value to modify a grid position;
 // to be used in editing a structure which stores a grid position
 int jy_to_grid(int num) {
@@ -334,6 +284,56 @@ void attack_felix() {
       draw_ralph(ralph_pos);
     }
   }
+}
+
+void setup() {
+  Serial.begin(9600);
+  
+  tft.initR(INITR_REDTAB);
+
+  Serial.print("Initializing SD card...");
+    if (!SD.begin(SD_CS)) {
+      Serial.println("failed!");
+      return;
+    }
+    Serial.println("OK!");
+    if (!card.init(SPI_HALF_SPEED, SD_CS)) {
+        Serial.println("Raw SD Initialization has failed");
+        while (1) {};  // Just wait, stuff exploded.
+    }
+    
+    pinMode(select_pin, INPUT);
+    digitalWrite(select_pin, HIGH);
+    
+    make_windows(windows);
+
+    tft.fillScreen(tft.Color565(0x00, 0x00, 0x00)); // clear screen to black
+    
+    // set up initial layout
+    lcd_image_draw(&background, &tft, 0, 8, 0, 8, 128, 160);
+    tft.drawFastHLine(0, 8, 128, 0xFFFF); // draw scoreboard
+    tft.setCursor(6, 0);
+    tft.setTextColor(0xFFFF);
+    tft.print("Score: ");
+    tft.setCursor(42, 0);
+    tft.print("0");
+    tft.setCursor(79, 0);
+    tft.print("Lives:");
+    tft.setCursor(115, 0);
+    tft.print("3");
+    // break the windows!
+    break_windows(windows);
+
+    // initialize felix:
+    felix_pos.x = 2;
+    felix_pos.y = 2;
+    // initialize ralph
+    ralph_pos.x = 2;
+
+    draw_ralph(ralph_pos);
+    draw_felix(felix_pos);
+
+    ralph_stop = millis()/1000;
 }
 
 void loop() {
